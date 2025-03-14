@@ -1,6 +1,6 @@
 package com.cdri.bookmng.global.filter;
 
-import com.bootjpabase.global.enums.common.ApiReturnCode;
+import com.cdri.bookmng.global.enums.common.ApiReturnCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

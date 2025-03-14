@@ -1,6 +1,6 @@
 package com.cdri.bookmng.global.exception;
 
-import com.bootjpabase.global.enums.common.ApiReturnCode;
+import com.cdri.bookmng.global.enums.common.ApiReturnCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

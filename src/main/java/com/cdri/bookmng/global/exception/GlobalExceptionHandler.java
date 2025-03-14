@@ -1,6 +1,6 @@
 package com.cdri.bookmng.global.exception;
 
-import com.bootjpabase.global.enums.common.ApiReturnCode;
+import com.cdri.bookmng.global.enums.common.ApiReturnCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -217,27 +215,6 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * MissingServletRequestPartException 발생 시 처리 핸들러
-     * 필수 첨부파일 누락시
-     * @param request
-     * @param ex
-     * @return
-     */
-    @ExceptionHandler({MissingServletRequestPartException.class})
-    public ResponseEntity<ExceptionMsg> handleMissingFileException(HttpServletRequest request, Exception ex) {
-
-        ExceptionMsg exceptionMsg = ExceptionMsg.builder()
-                .success(false)
-                .path(request.getRequestURI())
-                .timestamp(LocalDateTime.now())
-                .errorCode(ApiReturnCode.REQUIRED_FILE_ERROR.getCode())
-                .errorMessage(ApiReturnCode.REQUIRED_FILE_ERROR.getMessage())
-                .build();
-
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
      * HttpMessageNotReadableException 발생 시 처리 핸들러
      * 클라이언트가 요청 본문을 잘못 전달한 경우
      * @param request
@@ -279,28 +256,6 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(exceptionMsg, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
-    }
-
-    /**
-     * AccessDeniedException 발생 시 처리 핸들러
-     * 사용자 권한이 부족하여 접근이 거부된 경우
-     * @param request
-     * @param ex
-     * @return
-     */
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ExceptionMsg> handleAccessDeniedException(HttpServletRequest request, AccessDeniedException ex) {
-        log.error(ex.getMessage(), ex);
-
-        ExceptionMsg exceptionMsg = ExceptionMsg.builder()
-                .success(false)
-                .path(request.getRequestURI())
-                .timestamp(LocalDateTime.now())
-                .errorCode(ApiReturnCode.FORBIDDEN_ERROR.getCode())
-                .errorMessage(ApiReturnCode.FORBIDDEN_ERROR.getMessage())
-                .build();
-
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.FORBIDDEN);
     }
 
     /**

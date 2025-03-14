@@ -23,7 +23,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MariaDBDialect
         format_sql: true
-        show_sql: false  # p6spy? ?? ??? ????? false? ??
+        show_sql: false  # p6spy가 대신 로그를 출력하므로 false로 설정
 
 # query logging
 logging:
@@ -39,11 +39,11 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
-    tags-sorter: alpha # ??? ??? ??
-    operations-sorter: method # ??? ??? ??
-    doc-expansion: none # ????? ????? ??
-  #    persist-authorization: true # ????? ???? ???? ???? ??
+    tags-sorter: alpha # 알파벳 순서로 정렬
+    operations-sorter: method # 메소드 순서로 정렬
+    doc-expansion: none # 카테고리가 접힌상태로 로딩
+  #    persist-authorization: true # 브라우저를 새로고침 하더라도 인증정보 유지
   packages-to-scan: com.cdri.bookmng
-  title: cdri-book-mng API ??
-  description: cdri-book-mng API ??
+  title: cdri-book-mng API 문서
+  description: cdri-book-mng API 문서
   version: 1.0
