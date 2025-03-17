@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "Book API", description = "카테고리 별로 분류되는 도서 시스템 API 설명")
+@Tag(name = "Book API", description = "카테고리 별로 분류되는 도서 관리 시스템 API")
 @RestController
 @RequiredArgsConstructor
 @Validated
