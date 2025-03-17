@@ -18,7 +18,8 @@ public enum ApiReturnCode {
     UNSUPPORTED_MEDIA_TYPE("지원하지 않는 미디어 타입입니다.", 415),
 
     /* book */
-
+    BOOK_CATEGORY_ESSENTIAL_ERROR("최소 한개의 카테고리가 필요합니다.", 400),
+    BOOK_TITLE_CONFLICT_ERROR("중복된 제목입니다.", 409),
 
     /************** 5XX **************/
     SERVER_ERROR("서버에서 오류가 발생했습니다.", 500)
