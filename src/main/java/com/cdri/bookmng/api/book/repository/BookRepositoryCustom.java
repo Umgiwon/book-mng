@@ -54,7 +54,7 @@ public class BookRepositoryCustom {
                   .where(pagingCondition(dto))
                   .offset(pageable.getOffset())
                   .limit(pageable.getPageSize())
-                  .orderBy(book.createdDate.desc())
+                  .orderBy(book.bookSn.desc())
                   .fetch();
 
           // 전체 데이터 카운트

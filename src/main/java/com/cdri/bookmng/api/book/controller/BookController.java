@@ -107,7 +107,7 @@ public class BookController {
             @RequestParam(required = false) String author,
             @Parameter(name = "categoryName", description = "카테고리", example = "문학", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
             @RequestParam(required = false) String categoryName,
-            @PageableDefault(page = 0, size = 10, sort = "regDt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(page = 0, size = 10, sort = "bookSn", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;
 

@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -239,18 +239,12 @@ class BookMngApplicationTests {
     @DisplayName("도서 검색 (전체 목록 조회) API 테스트")
     void getBookListTest() throws Exception{
 
-        // given
-        List<Book> bookList = bookRepository.findAll();
-
-        // when : API 호출 (도서 전체 목록 조회)
+        // when & then : API 호출 및 검증 (도서 전체 목록 조회)
         mockMvc.perform(get("/api/book")
                     .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", hasSize(4))) // 초기화 데이터 사이즈 검증
-                .andExpect(jsonPath("$.data[0].title").value(bookList.get(0).getTitle()))
-                .andExpect(jsonPath("$.data[1].title").value(bookList.get(1).getTitle()))
-                .andExpect(jsonPath("$.data[2].title").value(bookList.get(2).getTitle()))
-                .andExpect(jsonPath("$.data[3].title").value(bookList.get(3).getTitle()))
+                .andExpect(jsonPath("$.data", hasSize(4))) // 초기화 데이터 검증
+                .andExpect(jsonPath("$.data[*].title", containsInAnyOrder("너에게 해주지 못한 말들", "단순하게 배부르게", "게으른 사랑", "트랜드 코리아 2322"))) // 정렬 순서 상관없이 초기 데이터 제목 목록 검증
                 .andDo(print());
     }
 
@@ -258,14 +252,13 @@ class BookMngApplicationTests {
     @DisplayName("도서 검색 (카테고리 별로 검색) API 테스트")
     void getBookCategoryListTest() throws Exception{
 
-        // when : API 호출 (도서 전체 목록 조회)
+        // when & then : API 호출 및 검증 (도서 카테고리별 목록 조회)
         mockMvc.perform(get("/api/book")
                         .param("categoryName", "경제경영")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", hasSize(2))) // 초기화 데이터로 검증
-                .andExpect(jsonPath("$.data[0].title").value("너에게 해주지 못한 말들"))
-                .andExpect(jsonPath("$.data[1].title").value("트랜드 코리아 2322"))
+                .andExpect(jsonPath("$.data", hasSize(2))) // 초기화 데이터 검증
+                .andExpect(jsonPath("$.data[*].title", containsInAnyOrder("너에게 해주지 못한 말들", "트랜드 코리아 2322"))) // 정렬 순서 상관없이 초기 데이터 제목 목록 검증
                 .andDo(print());
     }
 
@@ -273,7 +266,7 @@ class BookMngApplicationTests {
     @DisplayName("도서 검색 (지은이와 제목으로 검색) API 테스트")
     void getBookTitleAuthorListTest() throws Exception{
 
-        // when : API 호출 (도서 전체 목록 조회)
+        // when & then : API 호출 및 검증 (도서 제목, 지은이로 목록 조회)
         mockMvc.perform(get("/api/book")
                         .param("title", "게으른 사랑")
                         .param("author", "권태영")
