@@ -46,7 +46,6 @@ dependencies {
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
 
     // P6Spy
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.2'
