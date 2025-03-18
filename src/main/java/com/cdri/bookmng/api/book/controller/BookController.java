@@ -98,7 +98,7 @@ public class BookController {
                                                 "<br>  - 카테고리별 검색 가능" +
                                                 "<br>  - 지은이, 제목으로 검색 가능" +
                                                 "<br>  - 전체 조건으로 검색 가능" +
-                                                "<br>  - 정렬순서 default : 데이터 생성일자")
+                                                "<br>  - 정렬순서 default : 도서 순번")
     @GetMapping("")
     public BaseResponse getBookList(
             @Parameter(name = "title", description = "도서명", example = "너에게 해주지 못한 말들", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))

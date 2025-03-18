@@ -41,7 +41,7 @@ springdoc:
     path: /swagger-ui.html
     tags-sorter: alpha # 알파벳 순서로 정렬
     operations-sorter: method # 메소드 순서로 정렬
-    doc-expansion: none # 카테고리가 접힌상태로 로딩
+#    doc-expansion: none # 카테고리가 접힌상태로 로딩
   packages-to-scan: com.cdri.bookmng
   title: CDRI-Book-Management-System API 문서
   description: 카테고리 별로 분류 가능한 도서 관리 시스템
