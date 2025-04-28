@@ -1,7 +1,7 @@
-# CDRI Book Management System
+# Book Management System
 
 ## 프로젝트 개요
-CDRI Book Management System은 도서 관리 기능을 제공하는 Spring Boot 기반 애플리케이션입니다. JPA와 QueryDSL을 활용하여 데이터 액세스를 효율적으로 수행하며, Swagger를 통한 API 문서화를 지원합니다.
+Book Management System은 도서 관리 기능을 제공하는 Spring Boot 기반 애플리케이션입니다. JPA와 QueryDSL을 활용하여 데이터 액세스를 효율적으로 수행하며, Swagger를 통한 API 문서화를 지원합니다.
 
 ## 기술 스택
 - **Spring Boot** 3.2.4
@@ -52,10 +52,10 @@ CDRI Book Management System은 도서 관리 기능을 제공하는 Spring Boot 
 
 #### Swagger 설정
 - API 문서 URL: `http://localhost:8080/swagger-ui.html`
-- API 문서 제목: `CDRI-Book-Management-System API 문서`
+- API 문서 제목: `Book-Management-System API 문서`
 - API 설명: `카테고리 별로 분류 가능한 도서 관리 시스템`
 - 버전: `1.0`
-- 패키지 스캔 경로: `com.cdri.bookmng`
+- 패키지 스캔 경로: `com.bookmng`
 
 ## 실행 방법
 1. **Gradle 빌드**
