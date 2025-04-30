@@ -6,6 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
+/**
+ * * 들어온 요청을 읽기 전용(readOnly = ture)으로 처리할지(readOnly = false)으로 처리할지 제어한다.
+ * * GET일 경우 (readOnly = true) 처리
+ */
 @Service
 public class ReadOnlyTx {
 

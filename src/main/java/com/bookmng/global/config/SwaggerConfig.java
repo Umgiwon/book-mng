@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${springdoc.title}")
+    @Value("${springdoc.info.title}")
     private String API_TITLE;
 
-    @Value("${springdoc.description}")
-    private String API_DECRIPTION;
+    @Value("${springdoc.info.description}")
+    private String API_DESCRIPTION;
 
-    @Value("${springdoc.version}")
+    @Value("${springdoc.info.version}")
     private String API_VERSION;
 
     @Bean
@@ -34,6 +34,6 @@ public class SwaggerConfig {
         return new Info()
                 .title(API_TITLE) // API의 제목
                 .version(API_VERSION) // API의 버전
-                .description(API_DECRIPTION); // API에 대한 설명
+                .description(API_DESCRIPTION); // API에 대한 설명
     }
 }

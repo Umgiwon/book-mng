@@ -17,9 +17,11 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,7 +48,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(String.format("%s [%s]", ApiReturnCode.SERVER_ERROR.getMessage(), ex.getMessage()))
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionMsg);
     }
 
     /**
@@ -66,7 +68,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ex.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -89,7 +91,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(errorMessage)
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -110,7 +112,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(", ")))
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -132,7 +134,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(errorMessage)
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -151,7 +153,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ex.getParameterName() + " 파라미터는 필수값입니다.")
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -170,7 +172,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ex.getApiReturnCode().getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionMsg);
     }
 
     /**
@@ -190,7 +192,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ApiReturnCode.NO_URL_ERROR.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionMsg);
     }
 
     /**
@@ -211,7 +213,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ApiReturnCode.METHOD_NOT_ALLOWED.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.METHOD_NOT_ALLOWED);
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(exceptionMsg);
     }
 
     /**
@@ -233,7 +235,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ApiReturnCode.BAD_REQUEST_TEXT.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMsg);
     }
 
     /**
@@ -255,7 +257,7 @@ public class GlobalExceptionHandler {
                 .errorMessage(ApiReturnCode.UNSUPPORTED_MEDIA_TYPE.getMessage())
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(exceptionMsg);
     }
 
     /**
@@ -283,6 +285,6 @@ public class GlobalExceptionHandler {
                 .errorMessage(errorMessage)
                 .build();
 
-        return new ResponseEntity<>(exceptionMsg, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(exceptionMsg);
     }
 }
