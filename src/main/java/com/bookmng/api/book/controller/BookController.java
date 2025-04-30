@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,7 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "Book API", description = "카테고리 별로 분류되는 도서 관리 시스템 API")
+@Tag(name = "Book Management API", description = "카테고리 별로 분류되는 도서 관리 시스템 API")
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -101,22 +102,10 @@ public class BookController {
                                                 "<br>  - 정렬순서 default : 도서 순번")
     @GetMapping("")
     public BaseResponse getBookList(
-            @Parameter(name = "title", description = "도서명", example = "너에게 해주지 못한 말들", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String title,
-            @Parameter(name = "author", description = "지은이", example = "권태영", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String author,
-            @Parameter(name = "categoryName", description = "카테고리", example = "문학", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class))
-            @RequestParam(required = false) String categoryName,
+            @ParameterObject BookListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "bookSn", direction = Sort.Direction.DESC) Pageable pageable
     ) throws Exception {
         BaseResponse baseResponse;
-
-        // 조회용 dto set
-        BookListRequestDTO dto = BookListRequestDTO.builder()
-                .title(ObjectUtils.isEmpty(title) ? null : title)
-                .author(ObjectUtils.isEmpty(author) ? null : author)
-                .categoryName(ObjectUtils.isEmpty(categoryName) ? null : categoryName)
-                .build();
 
         // 도서 목록 조회 (페이징 처리)
         Page<BookResponseDTO> resultPaging = bookService.getBookList(dto, pageable);
