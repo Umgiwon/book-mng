@@ -8,6 +8,7 @@ import com.bookmng.api.book.service.BookService;
 import com.bookmng.api.book.service.BookServiceTx;
 import com.bookmng.global.domain.dto.BaseResponse;
 import com.bookmng.global.domain.dto.BaseResponseFactory;
+import com.bookmng.global.exception.ExceptionMsg;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -37,8 +38,9 @@ public class BookController {
     private final BookServiceTx bookServiceTx;
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
-            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "도서 저장", description = "도서 저장 API " +
                                             "<br>  - 제목, 지은이, 카테고리 필수 " +
@@ -73,8 +75,9 @@ public class BookController {
     ) throws Exception {return BaseResponseFactory.success(bookServiceTx.saveBook(dto));}
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = BookResponseDTO.class))),
-            @ApiResponse(responseCode = "204", description = "내용 없음", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "404", description = "데이터 오류", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "도서 목록 조회", description = "도서 목록 조회 API " +
                                                 "<br>  - 카테고리별 검색 가능" +
@@ -88,8 +91,9 @@ public class BookController {
     ) throws Exception {return BaseResponseFactory.successWithPagination(bookService.getBookList(dto, pageable));}
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
-            @ApiResponse(responseCode = "204", description = "수정 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "도서 수정", description = "도서 수정 API " +
                                             "<br>  - 상태 변경 가능 (AVAILABLE: 대여가능, DAMAGED: 훼손됨, LOST: 분실됨)" +
@@ -130,8 +134,9 @@ public class BookController {
     ) throws Exception {return BaseResponseFactory.success(bookServiceTx.updateBook(bookSn, dto));}
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
-            @ApiResponse(responseCode = "204", description = "삭제 실패", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "409", description = "데이터 중복", content = @Content(schema = @Schema(implementation = ExceptionMsg.class))),
+            @ApiResponse(responseCode = "500", description = "서버내부 오류발생", content = @Content(schema = @Schema(implementation = ExceptionMsg.class)))
     })
     @Operation(summary = "도서 삭제", description = "도서 삭제 API")
     @DeleteMapping("/{bookSn}")
