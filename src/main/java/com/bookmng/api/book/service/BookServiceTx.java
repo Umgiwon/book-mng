@@ -2,6 +2,7 @@ package com.bookmng.api.book.service;
 
 import com.bookmng.api.book.domain.dto.request.BookSaveRequestDTO;
 import com.bookmng.api.book.domain.dto.request.BookUpdateRequestDTO;
+import com.bookmng.api.book.domain.dto.response.BookResponseDTO;
 import com.bookmng.api.book.domain.entity.Book;
 import com.bookmng.api.book.domain.entity.Category;
 import com.bookmng.api.book.repository.BookRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class BookServiceTx {
      * @param dto
      * @return
      */
-    public boolean saveBook(BookSaveRequestDTO dto) {
+    public BookResponseDTO saveBook(BookSaveRequestDTO dto) {
 
         // 저장할 도서 entity 생성
         Book saveBook = createBookEntity(dto);
@@ -49,7 +51,7 @@ public class BookServiceTx {
             saveBook.addCategory(category);
         }
 
-        return true;
+        return bookEntityToDto(saveBook);
     }
 
     /**
@@ -84,7 +86,7 @@ public class BookServiceTx {
      * @param dto
      * @return
      */
-    public boolean updateBook(Long bookSn, BookUpdateRequestDTO dto) {
+    public BookResponseDTO updateBook(Long bookSn, BookUpdateRequestDTO dto) {
 
         // 수정할 도서 entity 조회
         Book updateBook = bookRepository.findById(bookSn)
@@ -93,7 +95,8 @@ public class BookServiceTx {
         // entity 영속성 컨텍스트 수정
         updateBook(updateBook, dto);
 
-        return true;
+        // 수정 후 dto 반환
+        return bookEntityToDto(updateBook);
     }
 
     /**
@@ -127,15 +130,32 @@ public class BookServiceTx {
      * @param bookSn
      * @return
      */
-    public boolean deleteBook(Long bookSn) {
+    public BookResponseDTO deleteBook(Long bookSn) {
 
         // 삭제할 entity 조회
-        Book updateBook = bookRepository.findById(bookSn)
+        Book deleteBook = bookRepository.findById(bookSn)
                 .orElseThrow(() -> new BusinessException(ApiReturnCode.NO_DATA_ERROR));
 
         // 삭제
-        bookRepository.delete(updateBook);
+        bookRepository.delete(deleteBook);
 
-        return true;
+        return bookEntityToDto(deleteBook);
+    }
+
+    /**
+     * 도서 entity를 dto로 변환
+     * @param book
+     * @return
+     */
+    private BookResponseDTO bookEntityToDto(Book book) {
+        return BookResponseDTO.builder()
+                .bookSn(book.getBookSn())
+                .title(book.getTitle())
+                .author(book.getAuthor())
+                .status(book.getStatus())
+                .categories(book.getCategories().stream()
+                        .map(bookCategory -> bookCategory.getCategory().getCategoryName())
+                        .collect(Collectors.toList()))
+                .build();
     }
 }

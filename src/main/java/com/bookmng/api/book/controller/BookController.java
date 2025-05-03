@@ -6,12 +6,9 @@ import com.bookmng.api.book.domain.dto.request.BookUpdateRequestDTO;
 import com.bookmng.api.book.domain.dto.response.BookResponseDTO;
 import com.bookmng.api.book.service.BookService;
 import com.bookmng.api.book.service.BookServiceTx;
-import com.bookmng.global.constant.ResponseMessageConst;
 import com.bookmng.global.domain.dto.BaseResponse;
-import com.bookmng.global.domain.dto.Pagination;
+import com.bookmng.global.domain.dto.BaseResponseFactory;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,16 +18,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "Book Management API", description = "카테고리 별로 분류되는 도서 관리 시스템 API")
@@ -52,7 +45,7 @@ public class BookController {
                                             "<br>  - 하나 이상의 카테고리 가능 " +
                                             "<br>  - 상태값 default : AVAILABLE(대여가능)")
     @PostMapping("")
-    public BaseResponse saveBook(
+    public BaseResponse<BookResponseDTO> saveBook(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
                     examples = {
                             @ExampleObject(name = "저장 예제1", value = """
@@ -77,19 +70,7 @@ public class BookController {
                     }
             ))
             @Valid @RequestBody BookSaveRequestDTO dto
-    ) throws Exception {
-        BaseResponse baseResponse;
-
-        // 도서 저장
-        boolean result = bookServiceTx.saveBook(dto);
-
-        // response set
-        baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SAVE_SUCCESS, 1 , true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.SAVE_FAIL, 0, false);
-
-        return baseResponse;
-    }
+    ) throws Exception {return BaseResponseFactory.success(bookServiceTx.saveBook(dto));}
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = BookResponseDTO.class))),
@@ -101,25 +82,10 @@ public class BookController {
                                                 "<br>  - 전체 조건으로 검색 가능" +
                                                 "<br>  - 정렬순서 default : 도서 순번")
     @GetMapping("")
-    public BaseResponse getBookList(
+    public BaseResponse<List<BookResponseDTO>> getBookList(
             @ParameterObject BookListRequestDTO dto,
             @PageableDefault(page = 0, size = 10, sort = "bookSn", direction = Sort.Direction.DESC) Pageable pageable
-    ) throws Exception {
-        BaseResponse baseResponse;
-
-        // 도서 목록 조회 (페이징 처리)
-        Page<BookResponseDTO> resultPaging = bookService.getBookList(dto, pageable);
-
-        // 데이터 결과값
-        List<BookResponseDTO> resultList = resultPaging.getContent();
-
-        // response set
-        baseResponse = !ObjectUtils.isEmpty(resultList)
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.SELECT_SUCCESS, resultList.size(), resultList, new Pagination(resultPaging))
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.NO_CONTENT.value(), ResponseMessageConst.NO_CONTENT, 0, new ArrayList<>());
-
-        return baseResponse;
-    }
+    ) throws Exception {return BaseResponseFactory.successWithPagination(bookService.getBookList(dto, pageable));}
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
@@ -130,7 +96,7 @@ public class BookController {
                                             "<br>  - 제목, 지은이 수정 가능" +
                                             "<br>  - 카테고리 수정 가능")
     @PatchMapping("/{bookSn}")
-    public BaseResponse updateBook(
+    public BaseResponse<BookResponseDTO> updateBook(
             @PathVariable("bookSn") Long bookSn,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "json", content = @Content(
                     examples = {
@@ -161,19 +127,7 @@ public class BookController {
                     }
             ))
             @Valid @RequestBody BookUpdateRequestDTO dto
-    ) throws Exception {
-        BaseResponse baseResponse;
-
-        // 도서 수정
-        boolean result = bookServiceTx.updateBook(bookSn, dto);
-
-        // response set
-        baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.UPDATE_SUCCESS, 1 , true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.UPDATE_FAIL, 0, false);
-
-        return baseResponse;
-    }
+    ) throws Exception {return BaseResponseFactory.success(bookServiceTx.updateBook(bookSn, dto));}
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
@@ -181,19 +135,7 @@ public class BookController {
     })
     @Operation(summary = "도서 삭제", description = "도서 삭제 API")
     @DeleteMapping("/{bookSn}")
-    public BaseResponse deleteBook(
+    public BaseResponse<BookResponseDTO> deleteBook(
             @PathVariable("bookSn") Long bookSn
-    ) throws Exception {
-        BaseResponse baseResponse;
-
-        // 도서 삭제
-        boolean result = bookServiceTx.deleteBook(bookSn);
-
-        baseResponse = result
-                ? BaseResponse.getBaseResponseBuilder(HttpStatus.OK.value(), ResponseMessageConst.DELETE_SUCCESS, 1, true)
-                : BaseResponse.getBaseResponseBuilder(HttpStatus.BAD_REQUEST.value(), ResponseMessageConst.DELETE_FAIL, 0, false);
-
-        return baseResponse;
-    }
-
+    ) throws Exception {return BaseResponseFactory.success(bookServiceTx.deleteBook(bookSn));}
 }
